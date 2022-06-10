@@ -4,11 +4,10 @@ const login = require('./src/login');
 const getCurrentAppointmentDate = require('./src/getCurrentAppointmentDate');
 const goToRescheduleAppointment =  require('./src/goToRescheduleAppointment');
 const getEarlierSpot = require('./src/getEarlierSpot');
+const Logger = require('./src/logger');
+const notify = require('./src/notifications');
 
-const credentials = {
-  email: process.env.email,
-  password: process.env.password,
-};
+const logger = new Logger();
 
 const startProcess = async () => {
   console.log('lets start the scrapping...')
@@ -16,10 +15,17 @@ const startProcess = async () => {
   const page = await browser.newPage();
   try {
     await page.goto('https://ais.usvisa-info.com/en-co/niv/users/sign_in');
-    await login(page, credentials);
+    await login(page);
     const appointmentDates = await getCurrentAppointmentDate(page);
     await goToRescheduleAppointment(page);
-    await getEarlierSpot(page);
+    const earlierDay = await getEarlierSpot(page);
+    const isEarlier = new Date(earlierDay) < appointmentDates.consularAppointment;
+
+    logger.updateLog(`Current date: ${appointmentDates.consularAppointment.toDateString()}, earlier spot: ${earlierDay}. earlier: ${isEarlier}`);
+
+    if (isEarlier) {
+      await notify(earlierDay);
+    }
   } catch (error) {
     console.log('oops something failed...', error);
   } finally {
@@ -32,7 +38,8 @@ const startProcess = async () => {
 
 if (process.env.NODE_ENV === 'prod') {
   const intervalTime = 1000 * 60 * 5;
-  
+  startProcess();
+
   setInterval(() => {
     startProcess();
   }, intervalTime);

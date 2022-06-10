@@ -1,4 +1,9 @@
-const login = async (page, credentials) => {
+const credentials = {
+  email: process.env.email,
+  password: process.env.password,
+};
+
+const login = async (page) => {
   await page.waitForSelector('input.email');
   await page.focus('input.email');
   await page.keyboard.type(credentials.email);

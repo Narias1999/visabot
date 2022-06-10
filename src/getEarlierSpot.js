@@ -33,6 +33,8 @@ const getEarlierSpot = async (page) => {
   });
 
   console.log('earlier spot found', earlierDay);
+
+  return earlierDay;
 };
 
 module.exports = getEarlierSpot;

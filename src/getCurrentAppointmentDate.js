@@ -1,7 +1,8 @@
 const dateMapper = (appointmentString) => {
-  const noCommas = appointmentString.replaceAll(',', '');
+  const [_1, _2, date] = appointmentString.split('\n');
+  const noCommas = date.replaceAll(',', '');
   const [day, month, year, hour] = noCommas.split(' ');
-  return new Date(`${day} ${month} ${year} ${hour}`);
+  return new Date(`${day} ${month} ${year}`);
 };
 
 const getCurrentAppointmentDate = async (page) => {
