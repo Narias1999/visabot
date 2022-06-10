@@ -7,6 +7,7 @@ const login = async (page, credentials) => {
 
   await page.click('input#policy_confirmed');
   await page.click('input[type=submit]');
+  console.log('login successful');
 };
 
 module.exports = login;

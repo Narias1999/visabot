@@ -17,6 +17,8 @@ const getCurrentAppointmentDate = async (page) => {
     return element.textContent;
   });
 
+  console.log('Getting current appointment dates successful');
+
   return {
     consularAppointment: dateMapper(consularAppointment),
     ASCAppointment: dateMapper(ASCAppointment),

@@ -3,6 +3,7 @@ const puppeteer = require('puppeteer');
 const login = require('./src/login');
 const getCurrentAppointmentDate = require('./src/getCurrentAppointmentDate');
 const goToRescheduleAppointment =  require('./src/goToRescheduleAppointment');
+const getEarlierSpot = require('./src/getEarlierSpot');
 
 const credentials = {
   email: process.env.email,
@@ -10,6 +11,7 @@ const credentials = {
 };
 
 const startProcess = async () => {
+  console.log('lets start the scrapping...')
   const browser = await puppeteer.launch({ headless: process.env.NODE_ENV === 'prod' });
   const page = await browser.newPage();
   try {
@@ -17,10 +19,12 @@ const startProcess = async () => {
     await login(page, credentials);
     const appointmentDates = await getCurrentAppointmentDate(page);
     await goToRescheduleAppointment(page);
+    await getEarlierSpot(page);
   } catch (error) {
     console.log('oops something failed...', error);
   } finally {
     if (process.env.NODE_ENV === 'prod') {
+      console.log('closing the browser :)');
       await browser.close();
     }
   }
