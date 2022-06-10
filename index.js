@@ -1,6 +1,7 @@
 require('dotenv').config();
 const puppeteer = require('puppeteer');
 const login = require('./src/login');
+const getCurrentAppointmentDate = require('./src/getCurrentAppointmentDate');
 
 const credentials = {
   email: process.env.email,
@@ -12,6 +13,7 @@ const startProcess = async () => {
   const page = await browser.newPage();
   await page.goto('https://ais.usvisa-info.com/en-co/niv/users/sign_in');
   await login(page, credentials);
+  const appointmentDates = await getCurrentAppointmentDate(page);
 }
 
 startProcess();
