@@ -1,6 +1,6 @@
 const dateMapper = (appointmentString) => {
   const [_1, _2, date] = appointmentString.split('\n');
-  const noCommas = date.replaceAll(',', '');
+  const noCommas = date.trim().replaceAll(',', '');
   const [day, month, year, hour] = noCommas.split(' ');
   return new Date(`${day} ${month} ${year}`);
 };
