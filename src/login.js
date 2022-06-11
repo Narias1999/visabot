@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 const credentials = {
   email: process.env.email,
   password: process.env.password,
@@ -12,7 +14,7 @@ const login = async (page) => {
 
   await page.click('input#policy_confirmed');
   await page.click('input[type=submit]');
-  console.log('login successful');
+  console.log(chalk.green('✅ Login successful'));
 };
 
 module.exports = login;

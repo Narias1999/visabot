@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 const dateMapper = (appointmentString) => {
   const [_1, _2, date] = appointmentString.split('\n');
   const noCommas = date.trim().replaceAll(',', '');
@@ -18,7 +20,7 @@ const getCurrentAppointmentDate = async (page) => {
     return element.textContent;
   });
 
-  console.log('Getting current appointment dates successful');
+  console.log(chalk.green('✅ Getting current appointment dates successful'));
 
   return {
     consularAppointment: dateMapper(consularAppointment),

@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const chalk = require('chalk');
 
 const { NOTIFICATIONS_MAIL, NOTIFICATIONS_SECRET, email } = process.env;
 
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 transporter.verify()
-  .then(() => console.log('system ready to send notifications'));
+  .then(() => console.log(chalk.blue('📧 System ready to send notifications')));
 
 const notify = async (date) => {
   await transporter.sendMail({

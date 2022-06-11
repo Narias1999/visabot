@@ -1,5 +1,8 @@
 require('dotenv').config();
+
 const puppeteer = require('puppeteer');
+const chalk = require('chalk');
+
 const login = require('./src/login');
 const getCurrentAppointmentDate = require('./src/getCurrentAppointmentDate');
 const goToRescheduleAppointment =  require('./src/goToRescheduleAppointment');
@@ -8,10 +11,11 @@ const Logger = require('./src/logger');
 const notify = require('./src/notifications');
 const reserveAppointment = require('./src/reserveAppointment');
 
+const waitingTime = 2;
 const logger = new Logger();
 
 const startProcess = async () => {
-  console.log('lets start the scrapping...')
+  console.log(chalk.cyan('✨ Lets start the scrapping...'));
   const browser = await puppeteer.launch({ headless: process.env.NODE_ENV === 'prod' });
   const page = await browser.newPage();
   try {
@@ -30,17 +34,18 @@ const startProcess = async () => {
   
     await reserveAppointment(page);
   } catch (error) {
-    console.log('oops something failed...', error);
+    console.log(chalk.red(`❌ ${error.message}`));
   } finally {
     if (process.env.NODE_ENV === 'prod') {
-      console.log('closing the browser :)');
+      console.log(chalk.blue(`🛑 Closing the browser`));
+      console.log(chalk.yellow(`⌛ Scraper will run again in ${waitingTime} minutes`));
       await browser.close();
     }
   }
 }
 
 if (process.env.NODE_ENV === 'prod') {
-  const intervalTime = 1000 * 60 * 2;
+  const intervalTime = 1000 * 60 * waitingTime;
   startProcess();
 
   setInterval(() => {

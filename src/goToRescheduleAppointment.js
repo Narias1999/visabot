@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 const goToRescheduleAppointment = async (page) => {
   await page.click('.dropdown a.button');
   await page.waitForSelector('.accordion-item:nth-child(4) .accordion-content a');
@@ -5,7 +7,7 @@ const goToRescheduleAppointment = async (page) => {
     document.querySelector('.accordion-item:nth-child(4) .accordion-content a').click();
   })
 
-  console.log('going to reschedule page successful');
+  console.log(chalk.green('✅ Going to reschedule page successful'));
 };
 
 module.exports = goToRescheduleAppointment;

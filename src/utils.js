@@ -4,7 +4,7 @@ function delay(time) {
   });
 };
 
-async function selectEarlierAvailableDay(calendarSelector) {
+async function selectEarlierAvailableDay(page, calendarSelector) {
   const earlierDay = await page.evaluate((selector) => {
     document.querySelector(selector).click();
     const calendarSelector = '#ui-datepicker-div .ui-datepicker-group-first';

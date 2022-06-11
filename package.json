@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "4.1.2",
     "dotenv": "^16.0.1",
     "nodemailer": "^6.7.5",
     "puppeteer": "^14.3.0"
