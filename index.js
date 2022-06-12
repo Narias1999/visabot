@@ -11,7 +11,7 @@ const Logger = require('./src/logger');
 const { sendMessage, messageTypes } = require('./src/notifications');
 const reserveAppointment = require('./src/reserveAppointment');
 
-const waitingTime = 2;
+const waitingTime = 7;
 const logger = new Logger();
 
 const startProcess = async () => {
@@ -29,7 +29,7 @@ const startProcess = async () => {
     const earlierDay = await getEarlierSpot(page);
     const isEarlier = new Date(earlierDay) < appointmentDates.consularAppointment;
 
-    logger.updateLog(`Current date: ${appointmentDates.consularAppointment.toDateString()}, earlier spot: ${earlierDay}. earlier: ${isEarlier}`);
+    logger.updateLog(`${new Date().toISOString()}: Current date: ${appointmentDates.consularAppointment.toDateString()}, earlier spot: ${earlierDay}. earlier: ${isEarlier}`);
   
     if (isEarlier) {
       await sendMessage(messageTypes.SPOT_AVAILABLE, earlierDay);
