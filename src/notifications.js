@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 transporter.verify()
   .then(() => console.log(chalk.blue('📧 System ready to send notifications')));
 
-const notify = async (date) => {
+const notifySpotAvailable = async (date) => {
   await transporter.sendMail({
     from: 'Visa Alerts <visaalertservice@gmail.com>',
     to: email,
@@ -25,4 +25,22 @@ const notify = async (date) => {
   });
 };
 
-module.exports = notify;
+const messageTypes = {
+  SPOT_AVAILABLE: 'spotAvailable',
+};
+
+const emailsMap = {
+  [messageTypes.SPOT_AVAILABLE]: notifySpotAvailable,
+};
+
+
+const sendMessage = (messageType, context) => {
+  if (emailsMap[messageType]) {
+    emailsMap[messageType](context);
+  } else {
+    console.log(chalk.red(`❌ Message type ${messageType} does not exist.`));
+  }
+};
+
+module.exports.messageTypes = messageTypes;
+module.exports.sendMessage = sendMessage;

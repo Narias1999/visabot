@@ -8,7 +8,7 @@ const getCurrentAppointmentDate = require('./src/getCurrentAppointmentDate');
 const goToRescheduleAppointment =  require('./src/goToRescheduleAppointment');
 const getEarlierSpot = require('./src/getEarlierSpot');
 const Logger = require('./src/logger');
-const notify = require('./src/notifications');
+const { sendMessage, messageTypes } = require('./src/notifications');
 const reserveAppointment = require('./src/reserveAppointment');
 
 const waitingTime = 2;
@@ -18,6 +18,9 @@ const startProcess = async () => {
   console.log(chalk.cyan('✨ Lets start the scrapping...'));
   const browser = await puppeteer.launch({ headless: process.env.NODE_ENV === 'prod' });
   const page = await browser.newPage();
+  if (process.env.NODE_ENV === 'dev') {
+    await page.setViewport({ width: 1366, height: 900});
+  }
   try {
     await page.goto('https://ais.usvisa-info.com/en-co/niv/users/sign_in');
     await login(page);
@@ -29,16 +32,18 @@ const startProcess = async () => {
     logger.updateLog(`Current date: ${appointmentDates.consularAppointment.toDateString()}, earlier spot: ${earlierDay}. earlier: ${isEarlier}`);
   
     if (isEarlier) {
-      await notify(earlierDay);
+      await sendMessage(messageTypes.SPOT_AVAILABLE, earlierDay);
+      await reserveAppointment(page);
     }
   
-    await reserveAppointment(page);
   } catch (error) {
     console.log(chalk.red(`❌ ${error.message}`));
   } finally {
     if (process.env.NODE_ENV === 'prod') {
       console.log(chalk.blue(`🛑 Closing the browser`));
       console.log(chalk.yellow(`⌛ Scraper will run again in ${waitingTime} minutes`));
+      console.log();
+      console.log();
       await browser.close();
     }
   }
